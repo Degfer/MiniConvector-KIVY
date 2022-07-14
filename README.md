@@ -5,3 +5,8 @@
 ## Technology stack
  - Python (3.10.5)
  - Kivy (2.1.0)
+
+## Run project
+```
+python main.py
+```
