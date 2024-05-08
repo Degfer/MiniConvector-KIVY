@@ -1,4 +1,5 @@
-name: Build (with Buildozer master)
+[admin@fedser KivyLC]$ cat .github/workflows/build.yml 
+name: Build
 on:
   push:
     branches-ignore:
@@ -10,27 +11,37 @@ on:
     branches-ignore:
       - data
       - gh-pages
-  schedule:
-      - cron: 0 0 */4 * * # at 00:00 UTC every fourth day
 
 jobs:
   # Build job. Builds app for Android with Buildozer
   build-android:
-    name: Build for Android (with Buildozer master)
-    runs-on: ubuntu-latest
+    name: Build for Android
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           path: master
+          
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+          architecture: x64
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade Cython
 
       - name: Build with Buildozer
-        uses: ./master # REPLACE WITH ArtemSBulgakov/buildozer-action@v1
+        uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
         with:
           repository_root: master
-          buildozer_version: master
+          workdir: .
+          buildozer_version: stable
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -44,12 +55,6 @@ jobs:
           path: data
           ref: data # Branch name
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-          architecture: x64
-
       - name: Push binary to data branch
         if: github.event_name == 'push'
-        run: python master/.ci/move_binary.py "${{ steps.buildozer.outputs.filename }}" master data bin-with-master
+        run: python master/.ci/move_binary.py "${{ steps.buildozer.outputs.filename }}" master data bin
