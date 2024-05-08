@@ -27,4 +27,3 @@ ENV PYTHONUNBUFFERED=1
 
 COPY entrypoint.py /action/entrypoint.py
 ENTRYPOINT ["/action/entrypoint.py"]
-RUN chmod +x entrypoint.py
