@@ -26,4 +26,5 @@ RUN echo "Set disable_coredump false" | sudo tee -a /etc/sudo.conf > /dev/null
 ENV PYTHONUNBUFFERED=1
 
 COPY entrypoint.py /action/entrypoint.py
-ENTRYPOINT ["dotnet", "/action/entrypoint.py"]
+ENTRYPOINT ["/action/entrypoint.py"]
+RUN chmod +x entrypoint.py
