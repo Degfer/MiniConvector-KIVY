@@ -30,6 +30,7 @@ jobs:
         id: buildozer
         with:
           repository_root: master
+          workdir: .
           buildozer_version: master
 
       - name: Upload artifacts
